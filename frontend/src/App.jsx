@@ -8,6 +8,8 @@ import EmailVerificationPage from './pages/EmailVerificationPage'
 import LoadingSpinner from './components/LoadingSpinner'
 import { Toaster } from 'react-hot-toast'
 import { useAuthStore } from './stores/authStore'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import ResetPasswordPage from './pages/ResetPasswordPage'
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, user } = useAuthStore();
@@ -55,7 +57,7 @@ const App = () => {
     checkAuth();
   }, [checkAuth]);
 
-  if(isCheckingAuth){
+  if (isCheckingAuth) {
     return <LoadingSpinner />
   }
 
@@ -85,10 +87,22 @@ const App = () => {
         } />
 
         <Route path="/verify-email" element={
-          <ProtectedRoute>
-            <EmailVerificationPage />
-          </ProtectedRoute>
+          <EmailVerificationPage />
         } />
+
+        <Route path="/forgot-password" element={
+          <RedirectAuthenticatedUser>
+            <ForgotPasswordPage />
+          </RedirectAuthenticatedUser>
+        } />
+
+        <Route path='/reset-password/:token' element={
+          <RedirectAuthenticatedUser>
+            <ResetPasswordPage />
+          </RedirectAuthenticatedUser>
+        }/>
+
+        <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
 
       <Toaster />
